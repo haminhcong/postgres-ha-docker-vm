@@ -18,10 +18,11 @@ services:
     ports:
      - 5432:5432
     volumes:
-    - ./pgbackrest.conf:/etc/pgbackrest/pgbackrest.conf:ro
+    - ./patroni-config.yml:/home/postgres/patroni-config.yml:ro
     - ./postgres-data/data:${PG_DATA_PATH-/home/postgres/postgres-data/data}
     - ./postgres-data/logs:${PG_LOG_PATH-/home/postgres/postgres-data/logs}    
-    - ./pgbackrest/certs:${PGBACKREST_CERT_PATH-/home/postgres/pgbackrest/certs}
+    - ./pgbackrest.conf:/etc/pgbackrest/pgbackrest.conf:ro
+    - ./pgbackrest-data/certs:${PGBACKREST_CERT_PATH-/home/postgres/pgbackrest-data/certs}
   # PG Backrest Server in each Postgres Host
   pgbackrest-postgres-server:
     <<: *postgres
@@ -31,7 +32,7 @@ services:
     ports:
      - 8432:8432
   # PG Backrest Server in PG Backrest Repo Host
-  pgbackrest-postgres-server:
+  pgbackrest-repo-server:
     <<: *postgres
     command:
     - /usr/bin/pgbackrest
@@ -39,4 +40,4 @@ services:
     ports:
      - 8432:8432
     volumes:  
-    - ./backup_space:${PGBACKREST_BACKUP_SPACE_PATH-/home/postgres/pgbackrest/backup_space}
+    - ./pgbackrest-data/backup_space:${PGBACKREST_BACKUP_SPACE_PATH-/home/postgres/pgbackrest-data/backup_space}
