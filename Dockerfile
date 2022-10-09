@@ -40,8 +40,8 @@ EXPOSE 5432 8008
 ENV LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8 EDITOR=/usr/bin/editor
 USER postgres
 WORKDIR /home/postgres
-CMD ["/bin/bash", "/entrypoint.sh"]
-
+ENTRYPOINT ["/bin/bash", "/entrypoint.sh"]
+CMD ["/usr/bin/python3", "/usr/local/bin/patroni", "/home/postgres/patroni.yml"]
 # FROM postgres:13.3-buster
 # RUN apt-get update -y \
 #     && apt-get install -y python3-pip rsync ssh vim
