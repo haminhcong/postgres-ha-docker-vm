@@ -13,13 +13,14 @@ services:
       - "pg3-srv:${PG3_HOST-127.0.0.1}"
       - "pg4-srv:${PG4_HOST-127.0.0.1}"
       - "pg5-srv:${PG5_HOST-127.0.0.1}"      
-      - "backup-srv:${PGBACKREST_REPO_HOST-127.0.1}"
+      - "pg-backup-repo-server1:${PGBACKREST_REPO_HOST-127.0.1}"
     user: 1001:1001
     network_mode: host
     # ports:
     #  - 5432:5432
     #  - 8000:8000
     volumes:
+    - postgres-socket:/var/run/postgresql
     - ./patroni-config.yml:/home/postgres/patroni-config.yml:ro
     - ./postgres-data/data:${PG_DATA_PATH-/home/postgres/postgres-data/data}
     - ./postgres-data/logs:${PG_LOG_PATH-/home/postgres/postgres-data/logs}    
@@ -28,6 +29,7 @@ services:
   # PG Backrest Server in each Postgres Host
   pgbackrest-postgres-server:
     <<: *postgres
+    network_mode: "bridge"
     command:
     - /usr/bin/pgbackrest
     - server
@@ -36,10 +38,16 @@ services:
   # PG Backrest Server in PG Backrest Repo Host
   pgbackrest-repo-server:
     <<: *postgres
+    network_mode: "bridge"
     command:
     - /usr/bin/pgbackrest
     - server
     ports:
      - 8432:8432
-    volumes:  
+    volumes:
+    - ./pgbackrest.conf:/etc/pgbackrest/pgbackrest.conf:ro
+    - ./pgbackrest-data/certs:${PGBACKREST_CERT_PATH-/home/postgres/pgbackrest-data/certs}    
     - ./pgbackrest-data/backup_space:${PGBACKREST_BACKUP_SPACE_PATH-/home/postgres/pgbackrest-data/backup_space}
+
+volumes:
+  postgres-socket:

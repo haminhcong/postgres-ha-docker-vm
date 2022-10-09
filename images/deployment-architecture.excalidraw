@@ -6821,12 +6821,12 @@
       "locked": false,
       "fontSize": 36,
       "fontFamily": 1,
-      "text": "Backup-SRV-1",
+      "text": "pg-backup-repo-server1-1",
       "baseline": 32,
       "textAlign": "center",
       "verticalAlign": "top",
       "containerId": "vuQqGgW_m52ABXjPDhQg9",
-      "originalText": "Backup-SRV-1"
+      "originalText": "pg-backup-repo-server1-1"
     },
     {
       "type": "rectangle",
@@ -7368,12 +7368,12 @@
       "locked": false,
       "fontSize": 36,
       "fontFamily": 1,
-      "text": "Backup-SRV-2",
+      "text": "pg-backup-repo-server1-2",
       "baseline": 32,
       "textAlign": "center",
       "verticalAlign": "top",
       "containerId": "fjrhT6ltTtZ3m75_iO7Rc",
-      "originalText": "Backup-SRV-2"
+      "originalText": "pg-backup-repo-server1-2"
     },
     {
       "type": "line",

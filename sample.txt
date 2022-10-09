@@ -44,11 +44,11 @@ pgbackrest@bastion-1:~/certs$ pwd
 
 mkdir certs && cd certs
 openssl req -new -x509 -days 365 -nodes -out ca.crt -keyout ca.key -subj "/CN=root-ca"
-openssl req -new -nodes -out backup-srv.csr -keyout backup-srv.key -subj "/CN=192.168.150.211"
+openssl req -new -nodes -out pg-backup-repo-server1.csr -keyout pg-backup-repo-server1.key -subj "/CN=192.168.150.211"
 openssl req -new -nodes -out pg1-srv.csr -keyout pg1-srv.key -subj "/CN=192.168.150.201"
 openssl req -new -nodes -out pg2-srv.csr -keyout pg2-srv.key -subj "/CN=192.168.150.202"
 openssl req -new -nodes -out pg3-srv.csr -keyout pg3-srv.key -subj "/CN=192.168.150.203"
-openssl x509 -req -in backup-srv.csr -days 365 -CA ca.crt -CAkey ca.key -CAcreateserial -out backup-srv.crt
+openssl x509 -req -in pg-backup-repo-server1.csr -days 365 -CA ca.crt -CAkey ca.key -CAcreateserial -out pg-backup-repo-server1.crt
 openssl x509 -req -in pg1-srv.csr -days 365 -CA ca.crt -CAkey ca.key -CAcreateserial -out pg1-srv.crt
 openssl x509 -req -in pg2-srv.csr -days 365 -CA ca.crt -CAkey ca.key -CAcreateserial -out pg2-srv.crt
 openssl x509 -req -in pg3-srv.csr -days 365 -CA ca.crt -CAkey ca.key -CAcreateserial -out pg3-srv.crt
