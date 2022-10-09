@@ -1,0 +1,36 @@
+version: '2.4'
+services:
+  postgres: &postgres
+    image: postgres-patroni:13.3-2.1.4
+    build: .
+    extra_hosts:
+      - "backup-srv:192.168.150.211"
+      - "pg1-srv:192.168.150.201"
+      - "pg2-srv:192.168.150.202"
+      - "pg3-srv:192.168.150.203"
+    user: 1001:1001
+    environment:
+      - UID=1001
+      - GID=1001
+    ports:
+     - 5432:5432
+    volumes:
+    - /etc/passwd:/etc/passwd:ro 
+    - ./pgbackrest.conf:/etc/pgbackrest/pgbackrest.conf:ro
+    - ./postgres-data:/home/postgres/postgres-lab/postgres-data
+    - ./pg-certs:/home/postgres/postgres-lab/pg-certs
+    - ./certs2:/home/postgres/postgres-lab/certs2
+  postgres-pgbackrest:
+    <<: *postgres
+    entrypoint:
+    - /usr/bin/pgbackrest
+    - server
+    ports:
+     - 8432:8432
+  postgres-pgbackrest-repository:
+    <<: *postgres
+    entrypoint:
+    - /usr/bin/pgbackrest
+    - server
+    ports:
+     - 8432:8432     
