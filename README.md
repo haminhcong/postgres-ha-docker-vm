@@ -2,6 +2,15 @@
 
 Deploy HA Postgres Cluster on VM with Docker and Docker Compose
 
+## Reasons for using Docker to deploy Postgres Cluster on VMs instead using K8S or OS packages
+
+- Postgres Operators in K8S mostly use one StorageClass - one Storage Backed.
+  Then in some environment, it's not enough to ensure that oone Storge Backend
+  can bring confident High Availability for HA Postgres Cluster.
+- Why using containerize instead using os packages (rpm, deb...)? Containerize
+  allow you make consistent deployments in any environments withouts aware
+  about OS, packages not found in yum, deb repository...
+
 ## Overral Deployment Architecture
 
 ![deployment-architecture.png](./images/deployment-architecture.png)
@@ -10,9 +19,10 @@ Deploy HA Postgres Cluster on VM with Docker and Docker Compose
 
 - OS VM: Ubuntu 20.04 Server
 - Docker + Docker Compose
-- PostgreSQL 13.3
-- Patroni 2.1.4
-- PgBackrest 2.41
+- Etcd 3.5.2 (Containerize)
+- PostgreSQL 13.3 (Containerize)
+- Patroni 2.1.4 (Containerize)
+- PgBackrest 2.41 (Containerize)
 - S3 Compatible Object Storage Solution -  Ceph Rados Gateway
 
 ## Deploy
@@ -53,6 +63,12 @@ Then push your container image to your container registry repository
 
 ### Initial New Cluster
 
+### Setup Etcd Cluster
+
+TODO
+
+### Setup Patroni Postgres Cluster
+
 Jump to first host `pg-srv1`.
 
 Create user `postgres` with `UID 1001`, group `postgres` with `GID 1001`.
@@ -63,9 +79,22 @@ groupadd  -g 1001 postgres
 useradd -u 1001 -g postgres postgres
 ```
 
+Then using `postgres` os user to perform following commands:
+
 Clone this GitHub Repo to working directory.
 
+Create `patroni-config.yml` file following example config file
+Create `pgbackrest.conf` file following example config file
 
+Create following folders:
+
+- `{WORKING_DIR}/postgres-data/data`
+- `{WORKING_DIR}/postgres-data/logs`
+
+```bash
+$ mkdir -p postgres-data/data
+$ mkdir -p postgres-data/logs
+```
 
 ### Perform Full Backup
 

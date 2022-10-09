@@ -1,0 +1,77 @@
+# postgresql cluster name
+scope: postgres01
+# postgresql cluster instance name
+name: patroni-192.168.150.201
+restapi:
+    # replace with postgres server IP Address
+    listen: 192.168.150.201:8000
+    # replace with postgres server IP Address    
+    connect_address: 192.168.150.201:8000
+
+
+etcd:
+    # replace with etcd cluster IP Addresses
+    hosts: 192.168.150.201:2379,192.168.150.202:2379,192.168.150.203:2379
+
+bootstrap:
+    dcs:
+        ttl: 30
+        loop_wait: 10
+        retry_timeout: 10
+        maximum_lag_on_failover: 1048576
+        postgresql:
+            use_pg_rewind: true
+
+    initdb:
+    - encoding: UTF8
+    - data-checksums
+
+    # allow cluster network can receive replication data from postgres master server
+    pg_hba:
+    - host replication replicator 127.0.0.1/32 md5
+    - host replication replicator 192.168.150.0/24 md5
+    - host all all 0.0.0.0/0 md5
+
+postgresql:
+    # replace with postgres server IP Address
+    listen: 192.168.150.201:5432
+    # replace with postgres server IP Address    
+    connect_address: 192.168.150.201:5432
+    # postgres data directory inside container
+    data_dir: /home/postgres/postgres-data/data
+    pgpass: /home/postgres/postgres-data/pass
+    authentication:
+        replication:
+            username: replicator
+            password: --REPLICATIOR-PASSWORD--
+        superuser:
+            username: postgres
+            password: --POSTGRES-SUPERUSER-PASSWORD--
+        rewind:  # Has no effect on postgres 10 and lower
+            username: rewind_user
+            password:  --REWIND-PASSWORD--
+    parameters:
+        unix_socket_directories: /home/postgres/postgres-data/unix
+        archive_mode: on
+        # archive WAL files to  pgbackrest repository host
+        archive_command: pgbackrest --stanza=postgres01 archive-push "%p"
+        logging_collector: true
+        log_directory: /home/postgres/postgres-data/logs
+        log_filename: postgres.log
+        log_rotation_size: 50000
+        log_truncate_on_rotation: true
+        log_file_mode: 0604
+        log_min_duration_statement: 250
+        shared_buffers: 128MB
+        max_connections: 200
+
+log:
+    level: INFO
+    dir: /home/postgres/postgres-data/logs
+    file_num: 1
+
+tags:
+    nofailover: false
+    noloadbalance: false
+    clonefrom: false
+    nosync: false
