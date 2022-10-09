@@ -1,4 +1,4 @@
-!/bin/bash
+# !/bin/bash
 
 # GID=$(id -g)
 # sed -e "s/^postgres:x:[^:]*:[^:]*:/postgres:x:$UID:$GID:/" /etc/passwd > /tmp/passwd
@@ -14,3 +14,4 @@
 # exec tail -f /dev/null
 
 exec "$@"
+# exec /usr/bin/python3 /usr/local/bin/patroni /home/postgres/patroni-config.yml

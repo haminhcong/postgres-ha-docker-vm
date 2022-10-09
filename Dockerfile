@@ -41,7 +41,7 @@ ENV LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8 EDITOR=/usr/bin/editor
 USER postgres
 WORKDIR /home/postgres
 ENTRYPOINT ["/bin/bash", "/entrypoint.sh"]
-CMD ["/usr/bin/python3", "/usr/local/bin/patroni", "/home/postgres/patroni.yml"]
+CMD ["/usr/bin/python3", "/usr/local/bin/patroni", "/home/postgres/patroni-config.yml"]
 # FROM postgres:13.3-buster
 # RUN apt-get update -y \
 #     && apt-get install -y python3-pip rsync ssh vim

@@ -8,15 +8,17 @@ services:
         PG_BASE_IMG: ${PG_BASE_IMG-13.3-buster}
         PATRONI_VERSION: ${PATRONI_VERSION-2.1.4}
     extra_hosts:
-      - "pg1-srv:${PG1_HOST-127.0.0.0.1}"
-      - "pg2-srv:${PG2_HOST-127.0.0.0.1}"
-      - "pg3-srv:${PG3_HOST-127.0.0.0.1}"
-      - "pg4-srv:${PG4_HOST-127.0.0.0.1}"
-      - "pg5-srv:${PG5_HOST-127.0.0.0.1}"      
-      - "backup-srv:${PGBACKREST_REPO_HOST-127.0.0.1}"
+      - "pg1-srv:${PG1_HOST-127.0.0.1}"
+      - "pg2-srv:${PG2_HOST-127.0.0.1}"
+      - "pg3-srv:${PG3_HOST-127.0.0.1}"
+      - "pg4-srv:${PG4_HOST-127.0.0.1}"
+      - "pg5-srv:${PG5_HOST-127.0.0.1}"      
+      - "backup-srv:${PGBACKREST_REPO_HOST-127.0.1}"
     user: 1001:1001
-    ports:
-     - 5432:5432
+    network_mode: host
+    # ports:
+    #  - 5432:5432
+    #  - 8000:8000
     volumes:
     - ./patroni-config.yml:/home/postgres/patroni-config.yml:ro
     - ./postgres-data/data:${PG_DATA_PATH-/home/postgres/postgres-data/data}

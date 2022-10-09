@@ -39,7 +39,7 @@ postgresql:
     connect_address: 192.168.150.201:5432
     # postgres data directory inside container
     data_dir: /home/postgres/postgres-data/data
-    pgpass: /home/postgres/postgres-data/pass
+    pgpass: /home/postgres/postgres-data/data/pass
     authentication:
         replication:
             username: replicator
@@ -51,7 +51,7 @@ postgresql:
             username: rewind_user
             password:  --REWIND-PASSWORD--
     parameters:
-        unix_socket_directories: /home/postgres/postgres-data/unix
+        # unix_socket_directories: /home/postgres/postgres-data/unix
         archive_mode: on
         # archive WAL files to  pgbackrest repository host
         archive_command: pgbackrest --stanza=postgres01 archive-push "%p"
