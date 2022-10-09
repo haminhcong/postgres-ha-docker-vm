@@ -37,6 +37,12 @@ PGBackrest Backup Repostory VM:
 
 Build Container Image:
 
+Following PGBackrest document to generate `pgbackrest` binary file
+
+<https://pgbackrest.org/user-guide.html#build>
+
+Then put output `pgbackrest` binary file to working directory then build
+
 ```bash
 docker-compose build postgres
 ```
@@ -49,14 +55,17 @@ Then push your container image to your container registry repository
 
 Jump to first host `pg-srv1`.
 
-Create user `postgres` with `UID 1001`. Grant user `postgres` `docker` and
-`docker-compose` permission
+Create user `postgres` with `UID 1001`, group `postgres` with `GID 1001`.
+Grant user `postgres` `docker` and `docker-compose` permission
+
+```bash
+groupadd  -g 1001 postgres
+useradd -u 1001 -g postgres postgres
+```
 
 Clone this GitHub Repo to working directory.
 
-```bash
 
-```
 
 ### Perform Full Backup
 

@@ -1,13 +1,19 @@
 version: '2.4'
 services:
   postgres: &postgres
-    image: postgres-patroni:13.3-2.1.4
-    build: .
+    image: ${IMAGE_NAME-postgres-patroni}:${IMAGE_TAG-13.3-buster-2.1.4}
+    build:
+      context: .
+      args:
+        PG_BASE_IMG: ${PG_BASE_IMG-13.3-buster}
+        PATRONI_VERSION: ${PATRONI_VERSION-2.1.4}
     extra_hosts:
-      - "backup-srv:192.168.150.211"
-      - "pg1-srv:192.168.150.201"
-      - "pg2-srv:192.168.150.202"
-      - "pg3-srv:192.168.150.203"
+      - "pg1-srv:${PG1_HOST-127.0.0.0.1}"
+      - "pg2-srv:${PG2_HOST-127.0.0.0.1}"
+      - "pg3-srv:${PG3_HOST-127.0.0.0.1}"
+      - "pg4-srv:${PG4_HOST-127.0.0.0.1}"
+      - "pg5-srv:${PG5_HOST-127.0.0.0.1}"      
+      - "backup-srv:${PGBACKREST_REPO_HOST-127.0.0.1}"
     user: 1001:1001
     environment:
       - UID=1001
@@ -15,7 +21,6 @@ services:
     ports:
      - 5432:5432
     volumes:
-    - /etc/passwd:/etc/passwd:ro 
     - ./pgbackrest.conf:/etc/pgbackrest/pgbackrest.conf:ro
     - ./postgres-data:/home/postgres/postgres-lab/postgres-data
     - ./pg-certs:/home/postgres/postgres-lab/pg-certs
