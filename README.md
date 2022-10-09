@@ -285,6 +285,17 @@ PG_LOG_PATH=/home/postgres/postgres-data/logs
 PGBACKREST_CERT_PATH=/home/postgres/pgbackrest/certs
 ```
 
+Review configure by command:
+
+`docker-compose config`
+
+Start `postgres` and `pgbackrest` containers:
+
+```bash
+docker-compose pull
+docker-compose up -d postgres pgbackrest
+```
+
 #### Setup PGBackrest Backup Repository Server
 
 #### Initiate First Full Backup

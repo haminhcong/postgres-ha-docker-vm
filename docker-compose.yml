@@ -22,17 +22,10 @@ services:
     - ./postgres-data/data:${PG_DATA_PATH-/home/postgres/postgres-data/data}
     - ./postgres-data/logs:${PG_LOG_PATH-/home/postgres/postgres-data/logs}    
     - ./pgbackrest/certs:${PGBACKREST_CERT_PATH-/home/postgres/pgbackrest/certs}
-  postgres-pgbackrest:
+  pgbackrest:
     <<: *postgres
     entrypoint:
     - /usr/bin/pgbackrest
     - server
     ports:
      - 8432:8432
-  postgres-pgbackrest-repository:
-    <<: *postgres
-    entrypoint:
-    - /usr/bin/pgbackrest
-    - server
-    ports:
-     - 8432:8432     
