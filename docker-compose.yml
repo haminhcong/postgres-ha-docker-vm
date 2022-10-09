@@ -19,9 +19,9 @@ services:
      - 5432:5432
     volumes:
     - ./pgbackrest.conf:/etc/pgbackrest/pgbackrest.conf:ro
-    - ./postgres-data:/home/postgres/postgres-lab/postgres-data
-    - ./pg-certs:/home/postgres/postgres-lab/pg-certs
-    - ./certs2:/home/postgres/postgres-lab/certs2
+    - ./postgres-data/data:${PG_DATA_PATH-/home/postgres/postgres-data/data}
+    - ./postgres-data/logs:${PG_LOG_PATH-/home/postgres/postgres-data/logs}    
+    - ./pgbackrest/certs:${PGBACKREST_CERT_PATH-/home/postgres/pgbackrest/certs}
   postgres-pgbackrest:
     <<: *postgres
     entrypoint:
