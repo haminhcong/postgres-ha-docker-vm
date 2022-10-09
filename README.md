@@ -229,6 +229,8 @@ Copy generated certificates to `{WORKING_DIR}/pgbackrest/certs` folder
 
 Create `pgbackrest.conf` configuration file from example configuration file
 
+`pgbackrest-postgres-server-example.conf`
+
 ```conf
 # pgbackrest.conf
 [global]
