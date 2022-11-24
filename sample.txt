@@ -1,0 +1,55 @@
+bash-4.4$ patronictl show-config hippo-ha
+loop_wait: 10
+postgresql:
+  parameters:
+    archive_command: pgbackrest --stanza=db archive-push "%p"
+    archive_mode: 'on'
+    archive_timeout: 60s
+    jit: 'off'
+    password_encryption: scram-sha-256
+    restore_command: pgbackrest --stanza=db archive-get %f "%p"
+    shared_preload_libraries: pgaudit
+    ssl: 'on'
+    ssl_ca_file: /pgconf/tls/ca.crt
+    ssl_cert_file: /pgconf/tls/tls.crt
+    ssl_key_file: /pgconf/tls/tls.key
+    unix_socket_directories: /tmp/postgres
+    wal_level: logical
+  pg_hba:
+  - local all "postgres" peer
+  - hostssl replication "_crunchyrepl" all cert
+  - hostssl "postgres" "_crunchyrepl" all cert
+  - host all "_crunchyrepl" all reject
+  - hostssl all all all md5
+  use_pg_rewind: true
+  use_slots: false
+ttl: 30
+
+
+
+pgbackrest@bastion-1:~$ cd certs/
+pgbackrest@bastion-1:~/certs$ ls
+pgbackrest@bastion-1:~/certs$ vim server.crt
+pgbackrest@bastion-1:~/certs$ vim server.key
+pgbackrest@bastion-1:~/certs$ vim ca.crt
+pgbackrest@bastion-1:~/certs$ ls
+ca.crt  server.crt  server.key
+pgbackrest@bastion-1:~/certs$ vim /etc/pgbackrest/
+conf.d/          pgbackrest.conf  
+pgbackrest@bastion-1:~/certs$ vim /etc/pgbackrest/pgbackrest.conf 
+pgbackrest@bastion-1:~/certs$ pwd
+/home/pgbackrest/certs
+
+
+
+mkdir certs && cd certs
+openssl req -new -x509 -days 365 -nodes -out ca.crt -keyout ca.key -subj "/CN=root-ca"
+openssl req -new -nodes -out pg-backup-repo-server1.csr -keyout pg-backup-repo-server1.key -subj "/CN=192.168.150.211"
+openssl req -new -nodes -out pg1-srv.csr -keyout pg1-srv.key -subj "/CN=192.168.150.201"
+openssl req -new -nodes -out pg2-srv.csr -keyout pg2-srv.key -subj "/CN=192.168.150.202"
+openssl req -new -nodes -out pg3-srv.csr -keyout pg3-srv.key -subj "/CN=192.168.150.203"
+openssl x509 -req -in pg-backup-repo-server1.csr -days 365 -CA ca.crt -CAkey ca.key -CAcreateserial -out pg-backup-repo-server1.crt
+openssl x509 -req -in pg1-srv.csr -days 365 -CA ca.crt -CAkey ca.key -CAcreateserial -out pg1-srv.crt
+openssl x509 -req -in pg2-srv.csr -days 365 -CA ca.crt -CAkey ca.key -CAcreateserial -out pg2-srv.crt
+openssl x509 -req -in pg3-srv.csr -days 365 -CA ca.crt -CAkey ca.key -CAcreateserial -out pg3-srv.crt
+rm *.csr
